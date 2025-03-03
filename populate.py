@@ -84,15 +84,20 @@ def populate_database():
 
         print("Movie dimension table populated successfully!")
 
-        # Generate Cinemas
+        # Generate Cinemas with Multiple Cinemas per City
         cinema_data = []
-        for _ in range(50):
-            name = fake.company()
-            city = fake.city()
-            state = fake.state()
-            hall_size = random.randint(50, 500)
-            cursor.execute("INSERT INTO cinema_dim (name, city, state, hall_size) VALUES (%s, %s, %s, %s) RETURNING cinema_id", (name, city, state, hall_size))
-            cinema_data.append(cursor.fetchone()[0])
+        cities = ["New York", "Los Angeles", "Chicago", "Houston", "Philadelphia"]  # Predefined list of cities
+        for city in cities:
+            num_cinemas = random.randint(2, 5)  # Generate 2 to 5 cinemas per city
+            for _ in range(num_cinemas):
+                name = fake.company()
+                state = fake.state()  # You might want to assign states based on the city
+                hall_size = random.randint(50, 500)
+                cursor.execute(
+                    "INSERT INTO cinema_dim (name, city, state, hall_size) VALUES (%s, %s, %s, %s) RETURNING cinema_id",
+                    (name, city, state, hall_size),
+                )
+                cinema_data.append(cursor.fetchone()[0])
 
         print("Cinema dimension table populated successfully!")
 
